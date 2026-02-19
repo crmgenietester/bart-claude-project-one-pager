@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>B.A.R.T. — Braze Analysis & Reporting Tool · Grafted Team Overview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green:      #125441;
+      --sage:       #969b86;
+      --terracotta: #c46d4b;
+      --gold:       #edda6b;
+      --charcoal:   #5b5a60;
+      --cream:      #e0dacb;
+      --cream-light:#f5f2ec;
+      --white:      #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream-light);
+      color: var(--charcoal);
+      line-height: 1.7;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--green);
+      padding: 80px 60px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(237,218,107,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: 40px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(196,109,75,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards 0.1s;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.1;
+      max-width: 700px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.25s;
+    }
+    .hero h1 span { color: var(--gold); }
+    .bart-def {
+      margin-top: 14px;
+      margin-bottom: 4px;
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(224,218,203,0.75);
+      letter-spacing: 0.04em;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.35s;
+    }
+    .bart-letter {
+      color: var(--gold);
+      font-weight: 700;
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+    }
+    .hero-sub {
+      margin-top: 20px;
+      font-size: 17px;
+      font-weight: 300;
+      color: var(--white);
+      max-width: 580px;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.4s;
+    }
+    .hero-meta {
+      margin-top: 36px;
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.55s;
+    }
+    .hero-badge {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: var(--cream);
+      font-weight: 500;
+    }
+    .hero-badge strong { color: var(--gold); }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ── SECTION ── */
+    section {
+      padding: 64px 0;
+      border-bottom: 1px solid rgba(91,90,96,0.12);
+    }
+    section:last-child { border-bottom: none; }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--green);
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+    .section-body {
+      font-size: 15.5px;
+      color: var(--charcoal);
+      max-width: 720px;
+    }
+    .section-body p + p { margin-top: 14px; }
+
+    /* ── WHAT IS IT ── */
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 36px;
+    }
+    .intro-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 28px 28px 24px;
+      border-left: 4px solid var(--green);
+      box-shadow: 0 2px 12px rgba(18,84,65,0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .intro-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 24px rgba(18,84,65,0.1);
+    }
+    .intro-card.accent { border-left-color: var(--terracotta); }
+    .intro-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: var(--green);
+      margin-bottom: 10px;
+    }
+    .intro-card.accent h3 { color: var(--terracotta); }
+    .intro-card p { font-size: 14.5px; line-height: 1.65; }
+
+    /* ── CONVERSATION REPLAY ── */
+    .chat-feed {
+      margin-top: 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .chat-msg {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeUp 0.5s ease forwards;
+    }
+    .chat-msg:nth-child(1) { animation-delay: 0.05s; }
+    .chat-msg:nth-child(2) { animation-delay: 0.15s; }
+    .chat-msg:nth-child(3) { animation-delay: 0.25s; }
+    .chat-msg:nth-child(4) { animation-delay: 0.35s; }
+    .chat-msg:nth-child(5) { animation-delay: 0.45s; }
+    .chat-msg:nth-child(6) { animation-delay: 0.55s; }
+    .chat-msg:nth-child(7) { animation-delay: 0.65s; }
+    .chat-msg:nth-child(8) { animation-delay: 0.75s; }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .avatar.user {
+      background: var(--cream);
+      color: var(--green);
+      border: 2px solid var(--sage);
+    }
+    .avatar.ai {
+      background: var(--green);
+      color: var(--gold);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+    }
+
+    .bubble-wrap { flex: 1; }
+    .bubble-name {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .bubble-name.user-name { color: var(--charcoal); }
+    .bubble-name.ai-name { color: var(--green); }
+
+    .bubble {
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 14.5px;
+      line-height: 1.65;
+    }
+    .bubble.user {
+      background: var(--cream);
+      color: var(--charcoal);
+      border-top-left-radius: 4px;
+      max-width: 600px;
+    }
+    .bubble.ai {
+      background: var(--white);
+      color: var(--charcoal);
+      border: 1px solid rgba(18,84,65,0.1);
+      border-top-left-radius: 4px;
+      box-shadow: 0 2px 10px rgba(18,84,65,0.05);
+    }
+    .bubble.ai .api-call {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(18,84,65,0.06);
+      border: 1px solid rgba(18,84,65,0.15);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11.5px;
+      color: var(--green);
+      margin-bottom: 10px;
+    }
+    .bubble.ai .api-call::before {
+      content: '⚡';
+      font-size: 10px;
+    }
+    .bubble strong { color: var(--green); font-weight: 600; }
+    .bubble ul {
+      margin: 8px 0 0 18px;
+      font-size: 14px;
+    }
+    .bubble ul li { margin-bottom: 4px; }
+    .insight-pill {
+      display: inline-block;
+      background: rgba(237,218,107,0.25);
+      border: 1px solid rgba(237,218,107,0.6);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #7a6b00;
+      margin-top: 10px;
+    }
+
+    /* ── CAPABILITIES TABLE ── */
+    .cap-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 36px;
+    }
+    .cap-card {
+      background: var(--white);
+      border-radius: 10px;
+      padding: 22px 20px;
+      box-shadow: 0 2px 10px rgba(18,84,65,0.05);
+      border-top: 3px solid var(--sage);
+      transition: border-color 0.2s ease;
+    }
+    .cap-card:hover { border-top-color: var(--green); }
+    .cap-card .cap-icon {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .cap-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      color: var(--green);
+      margin-bottom: 6px;
+    }
+    .cap-card p { font-size: 13.5px; line-height: 1.55; color: var(--charcoal); }
+
+    /* ── ACCESS TABLE ── */
+    .access-table {
+      width: 100%;
+      margin-top: 32px;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .access-table thead tr {
+      background: var(--green);
+      color: var(--cream);
+    }
+    .access-table thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .access-table tbody tr {
+      border-bottom: 1px solid rgba(91,90,96,0.1);
+      transition: background 0.15s;
+    }
+    .access-table tbody tr:hover { background: rgba(18,84,65,0.03); }
+    .access-table tbody td {
+      padding: 11px 16px;
+      vertical-align: top;
+    }
+    .access-table tbody td:first-child {
+      font-weight: 600;
+      color: var(--green);
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+    }
+    .tag {
+      display: inline-block;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .tag.read { background: rgba(18,84,65,0.1); color: var(--green); }
+    .tag.no { background: rgba(196,109,75,0.12); color: var(--terracotta); }
+
+    /* ── GUARDRAILS ── */
+    .guardrails {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 32px;
+    }
+    .guardrail-card {
+      border-radius: 10px;
+      padding: 22px 24px;
+    }
+    .guardrail-card.can {
+      background: rgba(18,84,65,0.06);
+      border: 1px solid rgba(18,84,65,0.15);
+    }
+    .guardrail-card.cannot {
+      background: rgba(196,109,75,0.06);
+      border: 1px solid rgba(196,109,75,0.2);
+    }
+    .guardrail-card h4 {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .guardrail-card.can h4 { color: var(--green); }
+    .guardrail-card.cannot h4 { color: var(--terracotta); }
+    .guardrail-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 14px;
+    }
+    .guardrail-card.can ul li::before { content: '✓  '; color: var(--green); font-weight: 700; }
+    .guardrail-card.cannot ul li::before { content: '✕  '; color: var(--terracotta); font-weight: 700; }
+
+    /* ── SETUP GUIDE ── */
+    .setup-intro {
+      font-size: 15.5px;
+      color: var(--charcoal);
+      max-width: 720px;
+      margin-bottom: 40px;
+    }
+    .setup-intro p + p { margin-top: 12px; }
+    .setup-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      margin-top: 8px;
+    }
+    .setup-steps::before {
+      content: '';
+      position: absolute;
+      left: 22px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--green), var(--sage));
+      border-radius: 2px;
+    }
+    .setup-step {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      padding: 28px 0 28px 0;
+      border-bottom: 1px solid rgba(91,90,96,0.08);
+      position: relative;
+    }
+    .setup-step:last-child { border-bottom: none; }
+    .step-num {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--green);
+      color: var(--gold);
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 0 0 4px var(--cream-light);
+    }
+    .step-body { flex: 1; padding-top: 8px; }
+    .step-body h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: var(--green);
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .step-body p {
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: var(--charcoal);
+      margin-bottom: 12px;
+    }
+    .step-body p:last-child { margin-bottom: 0; }
+    .step-body .step-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: rgba(18,84,65,0.05);
+      border-left: 3px solid var(--sage);
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      font-size: 13.5px;
+      color: var(--charcoal);
+      margin-top: 12px;
+    }
+    .step-note-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+    .step-body .step-warning {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: rgba(196,109,75,0.07);
+      border-left: 3px solid var(--terracotta);
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      font-size: 13.5px;
+      color: var(--charcoal);
+      margin-top: 12px;
+    }
+    .code-block {
+      background: var(--green);
+      color: var(--cream);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.7;
+      margin-top: 12px;
+      overflow-x: auto;
+    }
+    .code-block .c-comment { color: var(--sage); }
+    .code-block .c-key { color: var(--gold); }
+    .code-block .c-val { color: #a8d8c4; }
+    .step-checklist {
+      list-style: none;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .step-checklist li {
+      font-size: 14px;
+      color: var(--charcoal);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .step-checklist li::before {
+      content: '→';
+      color: var(--terracotta);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .prereq-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+    .prereq-tag {
+      background: var(--white);
+      border: 1px solid rgba(18,84,65,0.2);
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: 13px;
+      color: var(--green);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      background: var(--green);
+      padding: 48px 60px;
+      color: var(--cream);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: gap;
+      gap: 20px;
+    }
+    .footer-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .footer-brand span { color: var(--gold); }
+    .footer-note {
+      font-size: 13px;
+      opacity: 0.65;
+      max-width: 380px;
+      text-align: right;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 700px) {
+      .intro-grid, .cap-grid, .guardrails { grid-template-columns: 1fr; }
+      .hero { padding: 48px 24px 40px; }
+      .container { padding: 0 24px; }
+      .footer { flex-direction: column; }
+      .footer-note { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <p class="hero-eyebrow">Grafted Marketing Operations · Internal Learning</p>
+    <h1>Meet <span>B.A.R.T.</span><br/>How It Works & Why It Matters</h1>
+    <div class="bart-def">
+      <span class="bart-letter">B</span>raze&nbsp;
+      <span class="bart-letter">A</span>nalysis&nbsp;&amp;&nbsp;
+      <span class="bart-letter">R</span>eporting&nbsp;
+      <span class="bart-letter">T</span>ool
+    </div>
+    <p class="hero-sub">A real-world walkthrough of how Grafted's AI analyst connects directly to Braze — pulling live data, surfacing insights, and helping the team move faster without leaving the conversation.</p>
+    <div class="hero-meta">
+      <div class="hero-badge">Environment: <strong>Grafted Internal</strong></div>
+      <div class="hero-badge">Access: <strong>Read-Only · Non-PII</strong></div>
+      <div class="hero-badge">Functions Available: <strong>38 API Endpoints</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- WHAT IS IT -->
+<section>
+  <div class="container">
+    <p class="section-label">Overview</p>
+    <h2 class="section-title">What Is B.A.R.T.?</h2>
+    <div class="section-body">
+      <p><strong>B.A.R.T.</strong> stands for <strong>Braze Analysis & Reporting Tool</strong> — Grafted's internal AI-powered analyst, built on Claude and connected to Braze via the Model Context Protocol (MCP). MCP is the connection layer that allows the AI to talk directly to external tools and APIs in real time.</p>
+      <p>Instead of manually exporting CSVs, logging into the dashboard, or writing API calls, your team can simply ask questions in plain English and get live data pulled, interpreted, and summarized — instantly.</p>
+    </div>
+    <div class="intro-grid">
+      <div class="intro-card">
+        <h3>Live Data, Not Static Reports</h3>
+        <p>Every response pulls directly from the Braze API in real time. No stale exports, no manual refresh — the data is always current at time of asking.</p>
+      </div>
+      <div class="intro-card accent">
+        <h3>Insight, Not Just Output</h3>
+        <p>Raw API responses are interpreted into plain-language summaries with flags, anomalies, and recommended next steps — not just tables of numbers.</p>
+      </div>
+      <div class="intro-card">
+        <h3>Multi-Client Ready</h3>
+        <p>The project is built to support multiple Braze environments. Each client workspace is kept separate — no data bleed between environments.</p>
+      </div>
+      <div class="intro-card accent">
+        <h3>Agency-Grade Guardrails</h3>
+        <p>Read-only access means nothing can be accidentally changed. No writes, no deletes, no PII surfaced — safe to use across the whole team.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REAL CONVERSATION WALKTHROUGH -->
+<section>
+  <div class="container">
+    <p class="section-label">Real Example · From This Session</p>
+    <h2 class="section-title">A Live Walkthrough of the Project in Action</h2>
+    <p class="section-body">Below is an annotated replay of an actual conversation with the Braze MCP project — showing exactly how questions become API calls and API calls become insight.</p>
+
+    <div class="chat-feed">
+
+      <!-- MSG 1: User -->
+      <div class="chat-msg">
+        <div class="avatar user">You</div>
+        <div class="bubble-wrap">
+          <div class="bubble-name user-name">Team Member</div>
+          <div class="bubble user">Get a canvas list for Grafted Internal Braze that are active.</div>
+        </div>
+      </div>
+
+      <!-- MSG 2: AI -->
+      <div class="chat-msg">
+        <div class="avatar ai">AI</div>
+        <div class="bubble-wrap">
+          <div class="bubble-name ai-name">Braze Analyst</div>
+          <div class="bubble ai">
+            <div class="api-call">get_canvas_list · include_archived: false</div>
+            Returned <strong>54 non-archived canvases</strong>. Organized by recency and surfaced three observations without being asked:
+            <ul>
+              <li>The list endpoint doesn't return live active/inactive status — details calls needed to confirm live sends</li>
+              <li>Tag usage is nearly nonexistent — only 2 canvases tagged, making audits harder at scale</li>
+              <li>Heavy test/copy clutter — many canvases prefixed [TEST] or "Copy of"</li>
+            </ul>
+            <span class="insight-pill">💡 Proactive flag: tagging convention needed</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MSG 3: User -->
+      <div class="chat-msg">
+        <div class="avatar user">You</div>
+        <div class="bubble-wrap">
+          <div class="bubble-name user-name">Team Member</div>
+          <div class="bubble user">How many total users are in this Braze?</div>
+        </div>
+      </div>
+
+      <!-- MSG 4: AI -->
+      <div class="chat-msg">
+        <div class="avatar ai">AI</div>
+        <div class="bubble-wrap">
+          <div class="bubble-name ai-name">Braze Analyst</div>
+          <div class="bubble ai">
+            <div class="api-call">get_mau_data_series · length: 1</div>
+            <strong>4 MAU</strong> as of Feb 18, 2026 — expected for an internal sandbox. Also flagged clearly: Braze doesn't expose a total user count via the API. That metric lives in the dashboard under Settings → Billing. No fabricated data, no assumption.
+            <span class="insight-pill">⚠️ Limitation disclosed honestly</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MSG 5: User -->
+      <div class="chat-msg">
+        <div class="avatar user">You</div>
+        <div class="bubble-wrap">
+          <div class="bubble-name user-name">Team Member</div>
+          <div class="bubble user">How about DAU?</div>
+        </div>
+      </div>
+
+      <!-- MSG 6: AI -->
+      <div class="chat-msg">
+        <div class="avatar ai">AI</div>
+        <div class="bubble-wrap">
+          <div class="bubble-name ai-name">Braze Analyst</div>
+          <div class="bubble ai">
+            <div class="api-call">get_dau_data_series · length: 7</div>
+            Empty dataset returned. Explained why: DAU is driven by SDK session tracking — in a sandbox workspace with no active app SDK, this will always be empty. Normal and expected. Did not over-interpret or manufacture meaning.
+            <span class="insight-pill">✓ Context over confusion</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MSG 7: User -->
+      <div class="chat-msg">
+        <div class="avatar user">You</div>
+        <div class="bubble-wrap">
+          <div class="bubble-name user-name">Team Member</div>
+          <div class="bubble user">Get events data series.</div>
+        </div>
+      </div>
+
+      <!-- MSG 8: AI -->
+      <div class="chat-msg">
+        <div class="avatar ai">AI</div>
+        <div class="bubble-wrap">
+          <div class="bubble-name ai-name">Braze Analyst</div>
+          <div class="bubble ai">
+            <div class="api-call">get_events_list · page: 0</div>
+            Rather than asking a clarifying question first, pulled the full event list (<strong>54 custom events</strong>) and organized them by category — Account, Orders, Sessions, Skills, UI Interactions, Greenlight, Cosm, and Test — so the team could make an informed choice. Also flagged <strong>"Oder Delivered"</strong> as a likely typo worth fixing.
+            <span class="insight-pill">💡 Proactive flag: typo in event name</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section>
+  <div class="container">
+    <p class="section-label">Full Capability Set</p>
+    <h2 class="section-title">What This Project Can Do</h2>
+    <p class="section-body">38 read-only API endpoints are available across every major Braze data category.</p>
+    <div class="cap-grid">
+      <div class="cap-card">
+        <div class="cap-icon">📣</div>
+        <h4>Campaigns</h4>
+        <p>List, details, daily data series, and per-send analytics for API campaigns.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">🗺️</div>
+        <h4>Canvases</h4>
+        <p>List, metadata, time series data, and rolled-up summaries with step breakdowns.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">👥</div>
+        <h4>Segments</h4>
+        <p>List, details, and daily size trends to assess audience health over time.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">⚡</div>
+        <h4>Custom Events</h4>
+        <p>Full event list and daily/hourly occurrence series, filterable by segment.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">📈</div>
+        <h4>KPIs</h4>
+        <p>New users, DAU, MAU, and uninstalls — all as daily data series.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">💰</div>
+        <h4>Revenue & Purchases</h4>
+        <p>Total revenue, purchase quantity, and product lists over any time range.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">📱</div>
+        <h4>Sessions</h4>
+        <p>App session counts by day or hour, filterable by app ID or segment.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">🧩</div>
+        <h4>Content Blocks & Templates</h4>
+        <p>List and inspect all Content Blocks and email templates, including where they're used.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">🗓️</div>
+        <h4>Scheduled Broadcasts</h4>
+        <p>See all upcoming scheduled sends across campaigns and canvases.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">📦</div>
+        <h4>Catalogs</h4>
+        <p>Browse catalog names, items, and individual item details.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">🏷️</div>
+        <h4>Custom Attributes</h4>
+        <p>Full paginated list of all custom attributes in the workspace.</p>
+      </div>
+      <div class="cap-card">
+        <div class="cap-icon">🔗</div>
+        <h4>Subscriptions & CDI</h4>
+        <p>Subscription group status, user group membership, and CDI sync health.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- API REFERENCE SNAPSHOT -->
+<section>
+  <div class="container">
+    <p class="section-label">API Reference</p>
+    <h2 class="section-title">Key Functions at a Glance</h2>
+    <table class="access-table">
+      <thead>
+        <tr>
+          <th>Function</th>
+          <th>What It Returns</th>
+          <th>Access</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>get_canvas_list</td><td>All canvases with IDs, names, tags</td><td><span class="tag read">Read</span></td></tr>
+        <tr><td>get_canvas_details</td><td>Full canvas metadata & status</td><td><span class="tag read">Read</span></td></tr>
+        <tr><td>get_canvas_data_summary</td><td>Rolled-up performance metrics</td><td><span class="tag read">Read</span></td></tr>
+        <tr><td>get_campaign_list</td><td>All campaigns with IDs and tags</td><td><span class="tag read">Read</span></td></tr>
+        <tr><td>get_campaign_dataseries</td><td>Daily sends, opens, clicks, conversions</td><td><span class="tag read">Read</span></td></tr>
+        <tr><td>get_segment_list</td><td>All segments with analytics tracking status</td><td><span class="tag read">Read</span></td></tr>
+        <tr><td>get_segment_data_series</td><td>Daily estimated segment size</td><td><span class="tag read">Read</span></td></tr>
+        <tr><td>get_mau_data_series</td><td>Monthly active users over time</td><td><span class="tag read">Read</span></td></tr>
+        <tr><td>get_events_list</td><td>All custom events (250/page)</td><td><span class="tag read">Read</span></td></tr>
+        <tr><td>get_scheduled_broadcasts</td><td>Upcoming sends across all channels</td><td><span class="tag read">Read</span></td></tr>
+        <tr><td>Write / Update / Delete</td><td>Not available — by design</td><td><span class="tag no">No Access</span></td></tr>
+        <tr><td>PII / User Profiles</td><td>Not surfaced — by design</td><td><span class="tag no">No Access</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- GUARDRAILS -->
+<section>
+  <div class="container">
+    <p class="section-label">Guardrails & Boundaries</p>
+    <h2 class="section-title">What It Will and Won't Do</h2>
+    <p class="section-body">The project is designed to be safe, honest, and scoped. Here's the contract.</p>
+    <div class="guardrails">
+      <div class="guardrail-card can">
+        <h4>✓ This project will…</h4>
+        <ul>
+          <li>Pull live data from Braze on demand</li>
+          <li>Interpret results in plain language</li>
+          <li>Flag anomalies and misconfigurations proactively</li>
+          <li>Disclose limitations clearly when data isn't available</li>
+          <li>Support multiple client environments separately</li>
+          <li>Offer Braze guidance when a task needs manual action</li>
+        </ul>
+      </div>
+      <div class="guardrail-card cannot">
+        <h4>✕ This project will not…</h4>
+        <ul>
+          <li>Write, update, or delete anything in Braze</li>
+          <li>Surface or reference user PII</li>
+          <li>Fabricate or estimate missing data</li>
+          <li>Mix up data across client environments</li>
+          <li>Conflate test environments with production</li>
+          <li>Build segments or send campaigns directly</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SETUP GUIDE -->
+<section>
+  <div class="container">
+    <p class="section-label">Team Setup Guide</p>
+    <h2 class="section-title">How to Set Up B.A.R.T. Step by Step</h2>
+
+    <div class="setup-intro">
+      <p>Follow these steps to get B.A.R.T. connected and running in your Claude environment. The setup takes about 10–15 minutes and only needs to be done once per person. You'll need access to both Claude.ai (Pro or Team plan) and the Grafted Braze workspace.</p>
+    </div>
+
+    <p style="font-size:13px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--charcoal); margin-bottom:14px; opacity:0.6;">Prerequisites</p>
+    <div class="prereq-bar">
+      <div class="prereq-tag">✦ Claude.ai Pro or Team account</div>
+      <div class="prereq-tag">✦ Access to Grafted's Braze workspace</div>
+      <div class="prereq-tag">✦ Braze API key (provided by team lead)</div>
+      <div class="prereq-tag">✦ Braze REST endpoint URL</div>
+    </div>
+
+    <div class="setup-steps">
+
+      <!-- STEP 1 -->
+      <div class="setup-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Get Your Braze API Key</h4>
+          <p>B.A.R.T. uses a read-only Braze API key to pull data. This should be provisioned by your team lead or the person managing the Grafted Braze workspace. Do not use a personal or full-access key.</p>
+          <p>If you need to generate one yourself, in Braze go to <strong>Settings → API Keys → Create New API Key</strong>. Under permissions, enable only the export/read endpoints — no write permissions should be checked.</p>
+          <div class="step-note">
+            <span class="step-note-icon">💡</span>
+            <span>Ask your team lead for the shared Grafted Internal read-only key before creating a new one. We aim to keep API key sprawl minimal.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="setup-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Find Your Braze REST Endpoint</h4>
+          <p>Every Braze workspace uses a specific REST endpoint URL depending on which cluster it's on. You'll need this URL to configure the MCP connection.</p>
+          <p>In Braze, go to <strong>Settings → API Keys</strong> — the REST Endpoint is displayed at the top of that page. It will look something like:</p>
+          <div class="code-block">
+            <span class="c-val">https://rest.iad-01.braze.com</span>
+          </div>
+          <div class="step-note">
+            <span class="step-note-icon">📍</span>
+            <span>Grafted Internal uses the <strong>US-01</strong> cluster. This is already documented in the project system prompt — you won't need to look it up again after setup.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="setup-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Open Claude.ai and Navigate to Projects</h4>
+          <p>Log in to <strong>claude.ai</strong> with your Grafted team account. In the left sidebar, click <strong>Projects</strong>. If the B.A.R.T. project already exists and has been shared with you, open it directly — you can skip to Step 6.</p>
+          <p>If you're setting up a new instance of B.A.R.T., click <strong>New Project</strong> and give it a clear name like <em>Braze Analyst — Grafted Internal</em>.</p>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="setup-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Add the MCP Server Connection</h4>
+          <p>Inside your Project, open <strong>Project Settings</strong> and look for the <strong>Integrations</strong> or <strong>MCP Servers</strong> section. Click <strong>Add Integration</strong> (or <strong>Add MCP Server</strong> depending on your Claude version).</p>
+          <p>You'll be prompted to enter connection details for the Braze MCP server. Use the following configuration:</p>
+          <div class="code-block">
+            <span class="c-comment"># Braze MCP Server Configuration</span><br/>
+            <span class="c-key">Name:</span>        <span class="c-val">Braze — Grafted Internal</span><br/>
+            <span class="c-key">Server URL:</span>  <span class="c-val">[Provided by team lead]</span><br/>
+            <span class="c-key">API Key:</span>     <span class="c-val">[Your read-only Braze API key]</span><br/>
+            <span class="c-key">Endpoint:</span>    <span class="c-val">https://rest.iad-01.braze.com</span>
+          </div>
+          <div class="step-warning">
+            <span class="step-note-icon">⚠️</span>
+            <span>Never paste your API key into the chat itself — always enter it in the secure integration settings panel. Claude will not ask you to type it in conversation.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="setup-step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>Add the System Prompt to the Project</h4>
+          <p>The system prompt is what tells Claude how to behave as B.A.R.T. — it defines the role, available endpoints, tone, guardrails, and client context. Without it, Claude will respond as a generic assistant with no Braze context.</p>
+          <p>In Project Settings, find the <strong>Custom Instructions</strong> or <strong>System Prompt</strong> field and paste in the full B.A.R.T. system prompt. This is maintained by the Grafted ops team — request the latest version from your team lead.</p>
+          <div class="step-note">
+            <span class="step-note-icon">📄</span>
+            <span>The system prompt includes the Client Directory, endpoint list, tone guidelines, and multi-environment instructions. Keep it up to date as new clients are onboarded.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="setup-step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h4>Test the Connection</h4>
+          <p>Once the MCP server and system prompt are in place, start a new conversation inside the Project and run a simple test to confirm everything is connected:</p>
+          <ul class="step-checklist">
+            <li>Ask: <em>"Get a canvas list for Grafted Internal"</em> — should return real canvas names</li>
+            <li>Ask: <em>"What are my available Braze functions?"</em> — should return a list of 38 endpoints</li>
+            <li>Ask: <em>"Get MAU for the last 7 days"</em> — should return a data series (even if empty for sandbox)</li>
+          </ul>
+          <div class="step-note">
+            <span class="step-note-icon">✅</span>
+            <span>If you see real canvas names returned, B.A.R.T. is live and connected. If you get an error or generic response, double-check your API key and endpoint URL in the integration settings.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 7 -->
+      <div class="setup-step">
+        <div class="step-num">7</div>
+        <div class="step-body">
+          <h4>Adding a New Client Environment</h4>
+          <p>When onboarding a new client to B.A.R.T., a separate MCP connection should be configured for their Braze workspace using their own read-only API key and REST endpoint. Never mix client environments in the same connection.</p>
+          <p>Once connected, update the system prompt's <strong>Client Directory</strong> section with the new client's name, environment identifier, goals, and campaign conventions. This ensures B.A.R.T. interprets their data in the right context.</p>
+          <ul class="step-checklist">
+            <li>Obtain client's read-only Braze API key and REST endpoint</li>
+            <li>Add a new MCP server entry in the Project settings</li>
+            <li>Update the Client Directory in the system prompt</li>
+            <li>Run a canvas list test to confirm the new connection is live</li>
+            <li>Document the client environment in the team Notion or shared ops doc</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand"><img src="data:image/png;base64,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" alt="Grafted" style="height:44px; display:block;"/></div>
+  <div class="footer-note">B.A.R.T. — Braze Analysis & Reporting Tool · Grafted Marketing Operations · Internal Team Learning Document · February 2026</div>
+</footer>
+
+</body>
+</html>
